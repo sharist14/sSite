@@ -1,0 +1,153 @@
+#[body]#
+
+<div class="container-fluid py-4">
+    <div class="mt-3">
+        <div class="row justify-content-evenly">
+            <a href="/money_in" class="col-4 btn btn-success" style="max-width: 100px"><img src="{_IMG_}/_static/growth_icon.png" width="35px" alt=""><br>Доход</a>
+            <a href="/money_out" class="col-4 btn btn-danger" style="max-width: 100px"><img src="{_IMG_}/_static/purchase_icon.png" width="35px" alt=""><br>Расход</a>
+            <a href="/money_transfer" class="col-4 btn btn-primary" style="max-width: 100px"><img src="{_IMG_}/_static/transfer_icon.png" width="35px" alt=""><br>Перевод</a>
+        </div>      
+
+        <div class="row">
+
+            <!-- Блок Счета (слева) -->
+            <div class="col-12 col-md-6 d-flex mt-3">
+                <div class="alert alert-primary p-1 h-100 w-100 mb-1">
+                    <table class="table table-borderless mb-0">
+                        <thead>
+                            <tr style="border-bottom: 1px solid rgba(255,249,242,0.4)">
+                                <th colspan="2" class="h2" style="color: #084298">ЗП счета <a href="/analytics" style="max-width: 100px; padding-left: 8px;"><img src="{_IMG_}/_static/analytics.png" width="30px" alt=""></a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {salary_account_rows}
+                            <tr>
+                                <td class="col"><b>Всего</b></td>
+                                <td class="col text-end {salary_total_color}"><b>{salary_total_money} руб</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+<!--                <div class="alert alert-secondary p-0">-->
+<!--                    <h2 class="text-left px-2">Другие</h2>-->
+<!--                    <table class="table">-->
+<!--                        <tbody>-->
+<!--                        {other_account_rows}-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--                </div>-->
+            </div>
+
+            <div class="col-12 col-md-6 d-flex mt-3">
+                <div class="alert alert-danger p-1 {display_dept_block} h-100 w-100 mb-1">
+                    <table class="table table-borderless mb-0">
+                        <thead>
+                            <tr style="border-bottom: 1px solid rgba(255,249,242,0.4)">
+                                <th colspan="2" class="h2" style="color: #842029">Долг</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {debt_account_rows}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Блок Топ (справа) -->
+            <!--<div class="row col-12 col-md-6">-->
+                <!--<div class="col-12">-->
+                    <!--<h2 class="mt-3 text-center">Топ 5 крупных операций</h2>-->
+                    <!--<table class="table">-->
+                        <!--<thead>-->
+                        <!--<tr>-->
+                            <!--<th class="col text-center">Доходы</th>-->
+                            <!--<th class="col text-center">Расходы</th>-->
+                        <!--</tr>-->
+                        <!--</thead>-->
+                        <!--<tbody>-->
+                        <!--<tr>-->
+                            <!--<td class="col-6">-->
+                                <!--<table class="table">-->
+                                    <!--<thead></thead>-->
+                                    <!--<tbody>-->
+                                        <!--{profit_op_rows}-->
+                                    <!--</tbody>-->
+                                <!--</table>-->
+                            <!--</td>-->
+                            <!--<td class="col-6">-->
+                                <!--<table class="table">-->
+                                    <!--<thead></thead>-->
+                                    <!--<tbody>-->
+                                        <!--{expends_op_rows}-->
+                                    <!--</tbody>-->
+                                <!--</table>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                        <!--</tbody>-->
+                    <!--</table>-->
+                <!--</div>-->
+
+                <!--<div class="col-12">-->
+                    <!--<h2 class="mt-3 text-center">Топ 5 контрагентов</h2>-->
+                <!--</div>-->
+
+                <!--<div class="col-12">-->
+                    <!--<h2 class="mt-3 text-center">Топ 5 статей операций</h2>-->
+                <!--</div>-->
+
+            <!--</div>-->
+        </div>
+
+        <div class="col-12 mt-4 mx-auto" style="max-width: 1000px">
+            <div class="alert">
+                <h2 class="text-center">Последние 50 операций</h2>
+
+                <table class="table table-borderless">
+                    <thead>
+                        <tr class="row" style="border-bottom: 1px solid rgba(64,64,64,0.4)">
+                            <th class="col-4 py-3"><b>Дата</b></th>
+                            <th class="col-3 py-3"><b>Категория</b></th>
+                            <th class="col-5 py-3 text-end"><b>Сумма</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {rows}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+#[!body]#
+
+#[money_account_row]#
+<tr>
+    <th class="col-7">{title}</th>
+    <th class="col-5 text-end">{summ_account} руб</th>
+</tr>
+#[!money_account_row]#
+
+#[money_debt_row]#
+<tr>
+    <th class="col-7">{title}</th>
+    <th class="col-5 text-end {color_sum}">{summ_account} руб</th>
+</tr>
+#[!money_debt_row]#
+
+#[tr_common]#
+<tr>
+    <td>{title}</td>
+    <td class="text-end {class_common}" style="{style_common}">{value}</td>
+</tr>
+#[!tr_common]#
+
+#[last_flow_row]#
+<tr class="row align-items-center" style="border-top: 1px solid rgba(64,64,64,0.4); border-bottom: 1px solid rgba(64,64,64,0.4)">
+    <th class="col-4"><a href="{href_flow}" style="text-decoration: none; color: #084298">{date}</a></th>
+    <th class="col-3">{type}</th>
+    <th class="col-5 text-end text-nowrap {color_sum}">{op_sum} руб</th>
+</tr>
+#[!last_flow_row]#
+

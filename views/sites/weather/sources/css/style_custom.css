@@ -1,0 +1,245 @@
+@charset "UTF-8";
+body {
+    background-color: #000000 !important;
+    color: white !important;
+}
+
+
+.hidden{
+    display: none;
+}
+
+.w_param{
+    font-size: 19px;
+}
+
+.custom_sub, .custom_sup {
+    font-size: 55%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+    font-weight: normal;
+}
+
+.custom_sup {
+    top: -0.6em;
+}
+
+.custom_sub {
+    bottom: -0.25em;
+}
+
+
+/*-------------------- WEATHER BLOCK --------------------*/
+
+/***** Общие настройки ******/
+#weather{
+    /*max-width: 100%;*/
+    /*border: 1px dotted white;*/
+    /*padding: 15px;*/
+    /*font-family: 'Lato', sans-serif;*/
+    /*!*font-family: 'Work Sans', sans-serif;*!*/
+    /*!*font-family: 'Roboto', sans-serif;*!*/
+    /*background-color: #000000;*/
+    /*font-size: 1.5vw; !* 1.5% of viewport width *!*/
+    /*font-size: 11px; !* 3% of viewport width *!*/
+}
+
+#weather .param1,
+#weather .param2{
+    padding-right: 0;
+}
+
+.param1 .wi-thermometer-exterior{
+    display: block;
+    float: left;
+    padding-top: 5px
+}
+
+.param1 .description{
+    display: block;
+    margin-left: 45px
+}
+
+.w_subtitle{
+    font-size: 30px;
+    margin-top: 13px;
+    margin-left: 40px;
+}
+
+
+/***** Блок c параметрами (левый столбец) ******/
+/*!*иконки одинаковой ширины*!*/
+#weather i{
+    display: inline-block;
+    width: 40px;
+    text-align: center;
+}
+
+#weather .intensity_row{
+    margin-left: 45px;
+}
+
+#weather .icon_padding{
+    padding-left: 45px;
+}
+
+#weather .intensity_row .w_val{
+    padding-left: 15px;
+}
+
+#weather .intensity_row .rain_ico{
+    width: 15px;
+}
+
+#weather .intensity_row .snow_ico{
+    width: 18px;
+}
+/***** конец Блок c параметрами (левый столбец) ******/
+
+
+/***** Блок c параметрами (правый столбец) ******/
+.time_and_temp .curr_temp{
+    margin-top: 23px;
+}
+
+/* Цвет температуры */
+.time_and_temp .temp_plus{
+    color: #fb7c40;
+}
+.time_and_temp .temp_minus{
+    color: #4e4dfb;
+}
+
+.time_and_temp .icon_block{
+    margin-top: 25px;
+}
+
+.time_and_temp .icon_block.mobile{
+    margin-top: 0;
+}
+
+.time_and_temp .icon_block.pc_page{
+    margin-top: 0;
+}
+
+.time_and_temp .icon_block .weather_window{
+    position:absolute;
+    opacity: 0.85;
+    width: 225px;
+    height: 225px;
+}
+
+.time_and_temp .icon_block .weather_window.mobile{
+    position:absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.video_icon,
+.image_icon img{
+    width: 225px;
+    height: 225px;
+}
+
+.video_icon.pc_page,
+.image_icon.pc_page img{
+    width: 175px;
+    height: 175px;
+    margin-left: 25px;
+    margin-top: 35px;
+}
+/***** конец Блок c параметрами (правый столбец) ******/
+
+
+/****** hours_block (Goggle charts) ******/
+#hour_chart_frame{
+    width:100%;
+    height:350px;
+}
+
+/*.chart_div,*/
+/*.days_block{*/
+/*margin: 0 auto;*/
+/*}*/
+
+.days_block div{
+    text-align: center;
+}
+
+/*.hourly_block_title,*/
+/*.days_block_title{*/
+    /*margin-top: 15vh;*/
+/*}*/
+/****** end hours_block (Goggle charts) ******/
+
+
+/****** hours_block on next 6 hours ******/
+.hourly_block_title{
+    margin-top: 10px;
+}
+
+.hours_block{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.hours_block .hour_row{
+    padding: 0;
+    border-left: 1px solid rgba(255,255,255,0.5);
+}
+
+.hours_block .hour_row:nth-child(1){
+    border-left:none;
+}
+
+.selected_day{
+    background-color: #1f1f1f;
+}
+
+.hours_block > div{
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.hours_block.mobile .hour_row img{
+    width: 70px;
+}
+
+.hours_block.mobile .hour_row div{
+    font-size: 16px;
+}
+
+/****** end hours_block on next 6 hours ******/
+
+
+/****** days_block ******/
+.days_block{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.days_block .day_row{
+    padding: 0;
+    border-left: 1px solid rgba(255,255,255,0.5);
+}
+
+.days_block .day_row:nth-child(1){
+    border-left:none;
+}
+
+.selected_day{
+    background-color: #1f1f1f;
+}
+
+.days_block > div{
+    margin-bottom: 15px;
+}
+/****** end days_block ******/
+
+
+/*-------------------- END WEATHER BLOCK --------------------*/

@@ -1,0 +1,169 @@
+#[body]#
+<div class="header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+
+            <!-- Ссылка на главную -->
+            <a class="navbar-brand" href="/"><img src="{_IMG_}/_static/logo.png" width="40" alt=""></a>
+
+            <!-- Кнопка раскрытия меню (видна только в моб. версии)-->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Пункты меню -->
+            <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+
+                <div class="">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                        <!-- Меню "Доходы" -->
+                        <li class="nav-item dropdown">
+                            <a href="/money_in" class="nav-link d-inline-block px-0">
+                                <div class="img_menu_div"><i class="fal fa-sack-dollar"></i></div> Доходы
+                            </a>
+                            <a class="nav-link dropdown-toggle dropdown-toggle-split d-inline-block" href="#"
+                               id="income_nav" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="income_nav">
+                                <li>
+                                    <a class="dropdown-item" href="/money_in?act=edit">
+                                        <div class="img_menu_div"><i class="fal fa-file-plus"></i></div> Добавить доход
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Меню "Расходы" -->
+                        <li class="nav-item dropdown">
+                            <a href="/money_out" class="nav-link d-inline-block px-0">
+                                <div class="img_menu_div"><i class="fal fa-shopping-bag"></i></div> Расходы
+                            </a>
+                            <a class="nav-link dropdown-toggle dropdown-toggle-split d-inline-block" href="#"
+                               id="receipt_nav" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="receipt_nav">
+                                <li>
+                                    <a class="dropdown-item" href="/money_out?act=edit">
+                                        <div class="img_menu_div"><i class="fal fa-file-plus"></i></div> Добавить расход
+                                    </a>
+                                </li>
+
+                                <!-- Черный разделитель -->
+                                <div class="dropdown-divider"></div>
+
+                                <!-- Светлый разделитель
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li> -->
+
+                                <li>
+                                    <a class="dropdown-item" href="/money_out?act=add_qr">
+                                        <div class="img_menu_div"><img src="{_IMG_}/_static/qr-code-scan.svg" class="img_menu" alt=""></div> Сканировать qr чека
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+
+                        <!-- Меню "Переводы" -->
+                        <li class="nav-item dropdown">
+                            <a href="/money_transfer" class="nav-link d-inline-block px-0">
+                                <div class="img_menu_div"><i class="fal fa-university"></i></div> Переводы
+                            </a>
+                            <a class="nav-link dropdown-toggle dropdown-toggle-split d-inline-block" href="#"
+                               id="transfer_nav" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="transfer_nav">
+                                <li>
+                                    <a class="dropdown-item" href="/money_transfer?act=edit">
+                                        <div class="img_menu_div"><i class="fal fa-file-plus"></i></div> Добавить перевод
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+
+                        <!-- Аналитика -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/analytics"><i class="fal fa-chart-pie"></i> Аналитика</a>
+                        </li>
+
+
+                        <!-- Разное -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle dropdown-toggle-split d-inline-block" href="#"
+                               id="other_nav" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fal fa-toolbox"></i> Разное
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="other_nav">
+                                <li>
+                                    <a class="dropdown-item" href="/entity">
+                                        <div class="img_menu_div"><i class="fal fa-handshake"></i></div> Юр лица
+                                    </a>
+                                </li>
+                                <div class="dropdown-divider"></div>
+                                <li>
+                                    <a class="dropdown-item" href="/nalog_token">
+                                        <div class="img_menu_div"><i class="fal fa-key-skeleton"></i></div> Статус токена
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Test -->
+                        <li class="nav-item dropdown {display_test}">
+                            <a class="nav-link dropdown-toggle dropdown-toggle-split d-inline-block" href="#"
+                               id="test_nav" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fal fa-bug"></i> Test
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="test_nav">
+                                <li>
+                                    <a class="dropdown-item" href="/_test">
+                                        <div class="img_menu_div"><i class="fal fa-ballot-check"></i></div> Test page
+                                    </a>
+                                </li>
+                                <div class="dropdown-divider"></div>
+                                <li>
+                                    <a class="dropdown-item" href="/engine/core/common_api/TCPDF/examples/index.php">
+                                        <div class="img_menu_div"><i class="fal fa-file-pdf"></i></div> Примеры TCPDF
+                                    </a>
+                                </li>
+                                <div class="dropdown-divider"></div>
+                                <li>
+                                    <a class="dropdown-item" href="views/sites/_default/tpl/test/toast.html"> Уведомления с таймером</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <!-- Авторизация -->
+                <div class="">
+                    <ul class="navbar-nav me-auto">
+                        <li class="text-end nav-item dropdown border-0" style="position: inherit">
+                            <a href="#" class="nav-link dropdown-toggle dropdown-toggle-split d-inline-block px-0" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="img_menu_div">{user_icon}</div>
+                                {username}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="test_nav" style="right: 0; left: auto; top: 57px; min-width: 150px">
+                                <li>{auth_link}</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+#[!body]#
+
+#[user_auth]#
+<a class="dropdown-item" href="https://www.repelet.ru/login?act=logout"><div class="img_menu_div"><i class="fal fa-sign-out"></i></div> Выйти</a>
+#[!user_auth]#
+
+#[user_guest]#
+<a class="dropdown-item" href="https://www.repelet.ru/login"><div class="img_menu_div"><i class="fal fa-sign-in"></i></div> Войти</a>
+#[!user_guest]#
+

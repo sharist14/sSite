@@ -1,0 +1,189 @@
+#[body]#
+<a id="button_scroll"></a>
+
+<div class="container-fluid">
+    <h1 class="h1">Аналитика финансовых потоков</h1>
+
+    <form id="filter" method="post" onsubmit="return false">
+    <div class="alert alert-secondary mt-2" style="margin-left: -20px; margin-right: -20px;">
+        <div class="row">
+            <div class="col-6 col-md-auto">
+                <h4 class="text-center">Год</h4>
+                <div class="d-flex justify-content-center">
+                    <div class="d-block text-start">
+                        <!--Подтагиваем из базы все года начиная с первой записи (в зависимости от того выбран расход или доход)-->
+                        <select id="f_year" class="form-select" name="_f[year]">
+                            <option value="all">все</option>
+                            {year_options}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-auto">
+                <h4 class="text-center">Месяц</h4>
+                <div class="d-flex justify-content-center">
+                    <div class="d-block text-start">
+                        <select id="f_month" class="form-select" name="_f[month]">
+                            <option value="all" selected>все</option>
+                            <option value="01">Январь</option>
+                            <option value="02">Февраль</option>
+                            <option value="03">Март</option>
+                            <option value="04">Апрель</option>
+                            <option value="05">Май</option>
+                            <option value="06">Июнь</option>
+                            <option value="07">Июль</option>
+                            <option value="08">Август</option>
+                            <option value="09">Сентябрь</option>
+                            <option value="10">Октябрь</option>
+                            <option value="11">Ноябрь</option>
+                            <option value="12">Декабрь</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col border-end border-start border-dark mt-3 mt-md-0">
+                <h4 class="text-center">Операция</h4>
+                <div class="d-flex justify-content-center">
+                    <div class="d-block text-start">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="flow_type form-check-input" type="radio" name="_f[flow_type]" value="out" checked>Расход
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="flow_type form-check-input" type="radio" name="_f[flow_type]" value="in">Доход
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col border-end border-dark mt-3 mt-md-0">
+                <h4 class="text-center">Тип</h4>
+                <div class="d-flex justify-content-center">
+                    <div class="d-block text-start">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="value_type form-check-input" type="radio" name="_f[value_type]" value="pie" checked> Пирог
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="value_type form-check-input" type="radio" name="_f[value_type]" value="linear"> Линейный
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!--            <div class="col border-end border-dark mt-3 mt-md-0">-->
+<!--                <h4 class="text-center">Данные</h4>-->
+<!--                <div class="d-flex justify-content-center">-->
+<!--                    <div class="d-block text-start">-->
+<!--                        <div class="form-check">-->
+<!--                            <label class="form-check-label">-->
+<!--                                <input class="graph_type form-check-input" type="radio" name="_f[graph_type]" value="exact" checked> Точные-->
+<!--                            </label>-->
+<!--                        </div>-->
+<!--                        <div class="form-check">-->
+<!--                            <label class="form-check-label">-->
+<!--                                <input class="graph_type form-check-input" type="radio" name="_f[graph_type]" value="average"> Средние-->
+<!--                            </label>-->
+<!--                        </div>-->
+<!--                        <div class="form-check">-->
+<!--                            <label class="form-check-label">-->
+<!--                                <input class="graph_type form-check-input" type="radio" name="_f[graph_type]" value="median"> Медиана-->
+<!--                            </label>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+        </div>
+        <div class="col-12 mt-3">
+            <button id="send_form" class="btn btn-success w-100">Применить</button>
+        </div>
+    </div>
+    </form>
+
+    <!-- Тут выводяться графики -->
+    <div id="googleCharts" class="row justify-content-center"></div>
+</div>
+
+<script>
+$(function(){
+    utils.scroll_btn(); // Кнопка скролла
+
+    let cur_year = "{cur_year}";
+    let cur_month = "{cur_month}";
+
+    // Тип графика
+    var graph_type = $('.value_type:checked').val();
+
+    // Рисуем активный тип графика
+    money.doActiveGraph( graph_type, cur_month, cur_year );
+
+    // Когда применили фильтр
+    $('#send_form').on('click', function(){
+        graph_type = $('.value_type:checked').val();    // Заново запрашиваем тип графика
+        money.doActiveGraph( graph_type, cur_month, cur_year );
+    });
+
+    // При повороте экрана, заново строим график, чтобы он не выходил за рамки по ширине
+    window.addEventListener('resize', function(){
+        if(graph_type == 'linear') {
+            money.doActiveGraph(graph_type, cur_month, cur_year);
+        }
+    });
+
+    // Показываем строки с операциями (при клике на строку категории у пирога)
+    $(document).on("click", ".table_div table tbody tr", function() {
+        var tr_id = this.id;
+        const myArray = tr_id.split("_");
+        var year = myArray[0];
+        var month = myArray[1];
+        var type_id = myArray[2];   // id категории операции
+
+        // Скрываем все графики
+        money.hide_charts();
+
+        // Отображаем выбранный
+        $('#'+year+'_'+month).show();
+
+        // Находим направление
+        var flow_direct = $('.flow_type:checked').val();
+
+        $.ajax({
+            url: '/analytics?act=_ajax_getMonthTypeFlow',
+            method: 'post',
+            dataType: 'html',
+            data: {year: year, month: month, type_id: type_id, flow_direct: flow_direct},
+            success: function(data){
+                let div_id = 'flow_'+year+'_'+month;
+                $('#'+div_id).empty();
+                $('#'+div_id).append(data);
+
+                utils.scrollRecursive(div_id, 500, 10);
+            }
+        });
+    });
+
+    // Если в селект год выбран "все", то месяц тоже ставим "все"
+    $('#f_year').on('change', function() {
+      if(this.value == 'all'){
+          if($('#f_month').val() != 'all'){
+              $('#f_month option[value="all"]').prop('selected', true);
+          }
+      }
+    });
+
+    // Если в селект месяц выбран определенный месяц, то проверяем что год не имеет значение "все"
+    $('#f_month').on('change', function() {
+      if(this.value != 'all'){
+          if($('#f_year').val() == 'all'){
+              var cur_year = (new Date).getFullYear();
+              $('#f_year option[value="'+cur_year+'"]').prop('selected', true);
+          }
+      }
+    });
+});
+</script>
+#[!body]#

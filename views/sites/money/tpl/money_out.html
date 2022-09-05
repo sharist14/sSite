@@ -1,0 +1,153 @@
+#[receipt_view_body]#
+<div class="receipt_view container w-100 justify-content-center my-2" style="line-height: 1.2em;">
+  <div class="text-center"><b>{user}</b></div>
+  <div class="text-center">{retailPlace}</div>
+  <div class="text-center mt-2"><b>КАССОВЫЙ ЧЕК</b></div>
+  <div class="text-center mb-2"><b>{operationType}</b></div>
+
+  <table class="table">
+    <thead>
+    <tr class="d-flex">
+      <th style="width: 49%">Название</th>
+      <th style="width: 18%" class="px-0 text-center">Цена</th>
+      <th style="width: 15%" class="px-0 text-center">Кол-во</th>
+      <th style="width: 18%" class="px-0 text-center">Сумма</th>
+    </tr>
+    </thead>
+    <tbody>
+      {item_rows}
+    </tbody>
+  </table>
+
+  <div class="data_string d-flex justify-content-between"><div class="dot"></div> <span style="font-size: 1.5em"><b>Итог</b></span>  <span style="font-size: 1.5em">{totalSum} руб</span></div>
+  <div class="data_string d-flex justify-content-between"><div class="dot"></div> <span>Безналичные</span> <span>{ecashTotalSum} руб</span></div>
+  <div class="data_string d-flex justify-content-between"><div class="dot"></div><span>Наличные</span> <span>{cashTotalSum} руб</span></div>
+  <br>
+  <div class="data_string d-flex justify-content-between"><div class="dot"></div><span>Кассовый чек:</span> <span>{requestNumber}</span></div>
+  <div class="data_string d-flex justify-content-between"><div class="dot"></div><span>Смена:</span> <span>{shiftNumber}</span></div>
+  <div class="data_string d-flex justify-content-between"><div class="dot"></div><span>Вид налогооблажения:</span><span>{tax}</span></div>
+  <div class="data_string d-flex justify-content-between"><div class="dot"></div><span>Рег номер ККТ:</span> <span>{kktRegId}</span></div>
+  <div class="data_string d-flex justify-content-between"><div class="dot"></div><span>ФН:</span> <span>{fiscalDriveNumber}</span></div>
+  <div class="data_string d-flex justify-content-between"><div class="dot"></div><span>ФД:</span> <span>{fiscalDocumentNumber}</span></div>
+  <div class="data_string d-flex justify-content-between"><div class="dot"></div><span>ФПД:</span> <span>{fiscalSign}</span></div>
+  <div class="data_string d-flex justify-content-between"><div class="dot"></div><span>Сайт ФНС:</span> <span>https://www.nalog.ru</span></div>
+  <div class="data_string d-flex justify-content-between"><div class="dot"></div><span>ИНН</span> <span>{userInn}</span></div>
+  <div class="data_string d-flex justify-content-between"><div class="dot"></div><span>Дата/Время:</span> <span>{datetime}</span></div>
+  <div class="{retailPlaceAddress_hide}" style="padding: 0 5px"><span>Адрес расчёта: {retailPlaceAddress}</span></div>
+  <div class="{operator_hide}" style="padding: 0 5px"><span>Кассир: {operator}</span></div>
+
+  <div class="my-4 text-center">
+    {qr_code}
+  </div>
+</div>
+#[!receipt_view_body]#
+
+#[item_row]#
+<tr class="d-flex">
+  <td style="width: 49%; padding-left: 5px; padding-right: 0" class="">{title}</td>
+  <td style="width: 18%" class="px-0 text-center">{price}</td>
+  <td style="width: 15%" class="px-0 text-center">{count}</td>
+  <td style="width: 18%;  padding-left: 0; padding-right: 5px" class="px-0 text-end">{summ_row}</td>
+</tr>
+#[!item_row]#
+
+
+<!-- Страница добавления расхода через QR код чека -->
+#[add_qr]#
+<div class="receipt_add_auto row justify-content-center">
+  <div class="col-12 mt-3">
+    <h2 class="text-center">Добавить чек через камеру</h2>
+  </div>
+  <div class="col-12 text-center">
+    <video id="preview" class="border w-75"></video>
+  </div>
+  <div class="col-12 text-center mt-2">
+    <div class="btn-group btn-group-toggle mb-5 mx-auto" data-toggle="buttons">
+      <label class="btn btn-primary active">
+        <input type="radio" name="options" value="2" autocomplete="off" checked> Back Camera
+      </label>
+      <label class="btn btn-secondary">
+        <input type="radio" name="options" value="1" autocomplete="off"> Front Camera
+      </label>
+    </div>
+  </div>
+</div>
+
+<form id="form_receipt" action="?act=edit" method="POST">
+    <input type="hidden" name="t">
+    <input type="hidden" name="s">
+    <input type="hidden" name="fn">
+    <input type="hidden" name="i">
+    <input type="hidden" name="fp">
+    <input type="hidden" name="n">
+</form>
+
+<script src="{_JS_}/instascan.min.js"></script>
+<script type="text/javascript">
+    var scanner = new Instascan.Scanner({video: document.getElementById('preview'), scanPeriod: 5, mirror: false});
+    scanner.addListener('scan', function (content) {
+        $.ajax({
+            url: '/money_out?act=_ajax_check_receipt_qr',
+            method: 'post',
+            dataType: 'json',
+            data: {qr_scan: content},
+            success: function (data) {
+                console.log(content);
+                if( data['error'] ){
+                    alert('ОШИБКА: ' + data['title']);
+                } else{
+
+                    /* Добавляем отсканированную инфо в форму */
+                    var params = new window.URLSearchParams(content);
+
+                    $('input[name=t]').val(params.get('t'));
+                    $('input[name=s]').val(params.get('s'));
+                    $('input[name=fn]').val(params.get('fn'));
+                    $('input[name=i]').val(params.get('i'));
+                    $('input[name=fp]').val(params.get('fp'));
+                    $('input[name=n]').val(params.get('n'));
+
+                    $('#form_receipt').submit();
+                }
+            }
+        });
+    });
+    Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+            scanner.start(cameras[1]);
+            $('[name="options"]').on('change', function () {
+
+                if ($(this).val() == 2) {
+                    if (cameras[1] != "") {
+                        scanner.start(cameras[1]);
+                    } else {
+                        alert('No Back camera found!');
+                    }
+
+                } else if ($(this).val() == 1) {
+
+                    if (cameras[0] != "") {
+                        scanner.start(cameras[0]);
+                    } else {
+                        alert('No Front camera found!');
+                    }
+                }
+            });
+        } else {
+            console.error('No cameras found.');
+            alert('No cameras found.');
+        }
+    }).catch(function (e) {
+        console.error(e);
+        alert(e);
+    });
+</script>
+#[!add_qr]#
+
+
+#[error_body]#
+<div class="alert alert-danger mt-3">{err_title}</div>
+<div class="alert alert-success mt-1">{info}</div>
+#[!error_body]#
+
+

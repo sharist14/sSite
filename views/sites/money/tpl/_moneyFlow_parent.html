@@ -1,0 +1,354 @@
+#[body]#
+<div id="money_flow" class="container-fluid mt-2" style="max-width: 600px;">
+    <a id="button_scroll"></a>
+
+    <div class="mt-3">
+        <div class="d-flex justify-content-between" style="margin: 0 -12px 0 -12px">
+            <div class="d-inline-flex"><h2>{type_ru_title}</h2></div>
+            <div class="{hide_edit_btn}">
+                <div class="d-inline-flex">
+                    <a href="/money_{type_en}?act=edit" class="text-danger"><i class="fal fa-file-plus fa-2x"></i></a>
+                    <a href="/money_out?act=add_qr" class="text-danger {hide_add_qr}" style="padding-left: 30px"><i class="fal fa-qrcode fa-2x"></i></a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-5 p-0 {hide_paginator}">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text py-3"><i class="fas fa-filter"></i></span>
+                    </div>
+                    <select name="page" class="form-select col-6">
+                        {page_options}
+                    </select>
+                </div>
+            </div>
+            <div class="col-7 p-0 text-end my-auto {hide_month_summ}">
+                <span class="align-middle alert alert-secondary border-0">За месяц: {month_sum} руб</span>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            {day_rows}
+        </div>
+
+    </div>
+</div>
+<script>
+    $(function(){
+        utils.scroll_btn(); // Кнопка скролла
+
+        // Фильтр данных по дате
+        $('select[name=page]').on('change', function(){
+            var select_date = this.value;
+            // Находим текущий месяц и год
+            var d = new Date(),
+                month = d.getMonth() + 1,
+                year = d.getFullYear();
+            var cur_date = (month < 10 ? '0' : '') + month + '.' + year;
+
+            // если месяц текущий, дату не указываем
+            var page = '';
+            if(select_date != cur_date){
+                page = '/?page='+select_date;
+            }
+
+            window.location.replace('/money_{type_en}' + page);
+        });
+    });
+</script>
+#[!body]#
+
+#[day_row]#
+<div class="my-4 {flow_date}">
+    <div class="d-flex justify-content-between align-items-center"><span style="font-size: 1.3em"><b>{title_date} ({week})</b></span> <span class="{hide_day_summ}">За день: {day_summ} руб</span></div>
+    {profit_rows}
+</div>
+#[!day_row]#
+
+#[flow_row]#
+<div id="r{id}" class="mt-3">
+    <div class="row {bg_color} rounded-top small px-2 text-light border-bottom {bg_dept_color} {display_type_title}"><div class="col px-0">категория: {type_title}</div></div>
+
+    <div class="row {bg_color} text-light p-1 {flow_data}">
+        <div class="data col-9 d-inline-flex align-items-center px-1">
+            <div class="d-inline-flex rounded p-1" style="margin-right: 4px; border: 1px solid #dddddd57; {style_action_btn}">
+                {entity_logo}
+            </div>
+            <div class="d-inline-block w-100">
+                <div><b>{title_date}</b> на {flow_summa} руб</div>
+                <div>{status}</div>
+                <div class="comment alert alert-warning" style="padding: 0.1rem 0.1rem; margin: 0.2rem 0.1rem; {display_comment}">{comment}</div>
+            </div>
+        </div>
+
+        <div class="d-flex action col-3 align-items-center {style_div_btns}">
+            <a href="{edit_link}" class="btn p-0 d-inline-block {display_edit_link}"><img style="width: 40px" src="{_IMG_}/_static/edit_logo.png" alt=""></a>
+            {action_btn}
+        </div>
+    </div>
+
+    <div class="row {bg_color} rounded-bottom small px-2 pb-1 text-light border-top {display_account_title}">Счет: {account_title}</div>
+</div>
+#[!flow_row]#
+
+#[edit_form]#
+<div class="profit_add_manual row justify-content-center mx-auto" style="max-width: 500px">
+    <div class="col-12 mt-3">
+        <div class="d-flex justify-content-between">
+            <div class="d-inline-flex"><h2 class="text-center">{type_ru_title}</h2></div>
+            <div class="d-inline-flex">
+                <a href="?act=delete_flow&id={id}&flow_type=money_{type_en}" class="text-danger p-1 fs-1 {hide_del_btn}" onclick="return confirm('Удалить эту запись? Внимание: все связанные записи также будут удалены.')"><i class="fad fa-trash-alt"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <form action="?act=save" method="POST">
+        <input type="hidden" name="id" value="{id}">
+        <input type="hidden" name="linked_id" value="{linked_id}">
+        <input type="hidden" name="type_en" value="{type_en}">
+
+        <!-- Блок "Дата и время" -->
+        <div>
+            <label class="small w-100 mt-3"> Дата и время
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Дата</span>
+                    </div>
+                    <input type="datetime-local" name="t" class="form-control" placeholder value="{t}" required>
+                </div>
+            </label>
+        </div>
+
+        <!-- Блок "Сумма" -->
+        <div>
+            <label class="small w-100 mt-3"> Сумма с копейками
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Сумма</span>
+                    </div>
+                    <input type="number" name="s" class="form-control" pattern="^\d*(\.\d{0,2})?$" step=".01" placeholder="пример: 235.88" value="{s}" required>
+                </div>
+            </label>
+        </div>
+
+        <!-- Блок "Счёт списания" -->
+        <div class="{hide_account_from}">
+            <label class="small w-100 mt-3"> Счёт списания
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">От</span>
+                    </div>
+                    <select id="money_account_from" name="money_account_from" class="form-select" {disabled_account_from} required>
+                        <option value="" hidden>-- НЕ ВЫБРАН --</option>
+                        {account_options_from}
+                    </select>
+                </div>
+            </label>
+            <span id="balance_from" class="text-muted" style="margin-left: 75px"></span>
+        </div>
+
+        <!-- Блок "Счёт зачисления" -->
+        <div class="{hide_account_to}">
+            <label class="small w-100 mt-3"> Счёт зачисления
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Кому</span>
+                    </div>
+                    <select id="money_account_to" name="money_account_to" class="form-select" {disabled_account_to} required>
+                        <option value="" hidden>-- НЕ ВЫБРАН --</option>
+                        {account_options_to}
+                    </select>
+                </div>
+            </label>
+            <span id="balance_to" class="text-muted" style="padding-left: 75px"></span>
+        </div>
+
+        <!-- Блок "Тип операции" -->
+        <div class="{hide_type}">
+            <label class="small w-100 mt-3"> Тип операции
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Тип</span>
+                    </div>
+                    <select id="money_type_id" name="money_type_id" class="form-select" required>
+                        <option value="" hidden>-- НЕ ВЫБРАН --</option>
+                        {type_options}
+                    </select>
+                </div>
+            </label>
+        </div>
+
+        <!-- Блок "Юр лицо" -->
+        <div class="entity_block {hide_entity}">
+            <label class="small w-100 mt-3"> Юр лицо вручную
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">ЮЛ</span>
+                    </div>
+                    <select name="entity_id" class="form-control selectpicker" data-live-search="true">
+                        <option value="" hidden>-- НЕ ВЫБРАН --</option>
+                        {entity_options}
+                    </select>
+                </div>
+            </label>
+        </div>
+
+        <!-- Блок "Кассовый чек" -->
+        <div class="{hide_receipt}">
+            <label class="form-check-label mt-3 w-100" for="enable_receipt">
+                <div class="form-check">
+                    <input type="checkbox" id="enable_receipt" class="form-check-input" {checked_receipt}>
+                    Добавить кассовый чек
+                </div>
+            </label>
+
+            <div class="receipt_data" style="display: none">
+                <input type="hidden" name="n" value="">  <!-- тип чека, по умолч. приход-->
+
+                <label class="small w-100 mt-3"> <b>Ф</b>искальный <b>Н</b>акопитель
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">ФН</span>
+                        </div>
+                        <input type="number" name="fn" class="form-control" placeholder="пример: 9280440300886932"
+                               value="{fn}">
+                    </div>
+                </label>
+
+                <label class="small w-100 mt-3"> <b>Ф</b>искальный <b>Д</b>окумент
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">ФД</span>
+                        </div>
+                        <input type="number" name="i" class="form-control" placeholder="пример: 22980" value="{i}">
+                    </div>
+                </label>
+
+                <label class="small w-100 mt-3"> <b>Ф</b>искальный <b>П</b>ризнак
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">ФП</span>
+                        </div>
+                        <input type="number" name="fp" class="form-control" placeholder="пример: 3523929578" value="{fp}">
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Блок "Долг" (с выбором кредитора) -->
+        <div class="{hide_debt}">
+            <label class="form-check-label mt-3 w-100" for="is_debt">
+                <div class="form-check">
+                    <input type="hidden" name="is_debt" value="0">
+                    <input type="checkbox" name="is_debt" id="is_debt" class="form-check-input" value="1" {debt_checked} {disabled_debt}>
+                    взять/вернуть долг
+                </div>
+            </label>
+
+            <div class="debt_data" style="display: none">
+                <label class="small w-100 mt-3"> Кто даёт в долг
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Кред-р</span>
+                        </div>
+                        <select name="debt_account" class="form-select" {disabled_debt}>
+                            <option value="" hidden>-- НЕ ВЫБРАН --</option>
+                            {ro_account_options}
+                        </select>
+                    </div>
+                </label>
+
+                <label class="small w-100 mt-3"> Сумма в долг
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Долг</span>
+                        </div>
+                        <input type="number" name="debt_summa" class="form-control" pattern="^\d*(\.\d{0,2})?$"
+                               step=".01" placeholder="пример: 235.88" value="{debt_summa}" {disabled_debt}>
+                    </div>
+                </label>
+
+                <label class="small w-100 mt-3"> Пометка для долга
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Текст</span>
+                        </div>
+                        <input type="text" name="debt_comment" class="form-control" value="{debt_comment}" {disabled_debt}>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Блок "Подтвердить вручную" -->
+        <div class="{hide_manual_confirm}">
+            <label class="form-check-label mt-3 w-100" for="manual_confirm">
+                <div class="form-check">
+                    <input type="hidden" name="manual_confirm" value="0">
+                    <input type="checkbox" name="manual_confirm" id="manual_confirm" class="form-check-input" value="1" {manual_confirm_checked} {disabled_manual_confirm}>
+                    Подтвердить вручную
+                </div>
+            </label>
+        </div>
+
+        <!-- Блок "Комментарий" -->
+        <div>
+            <label class="small w-100 mt-3"> Комментарий (необязательно)
+                <div class="input-group">
+                    <textarea name="comment" rows="3" class="w-100">{comment}</textarea>
+                </div>
+            </label>
+        </div>
+
+        <input type="submit" class="form-control btn btn-success btn-lg mt-3" value="Сохранить">
+
+    </form>
+</div>
+
+<script>
+    $(function(){
+        /* Добавить/редактировать чек */
+        money.add_receipt();
+        $('#enable_receipt').on('change', function () {
+            money.add_receipt();
+            money.mark_required();
+        });
+
+        /* Добавить/убрать долг */
+        money.do_debt();
+        $('#is_debt').on('change', function () {
+            money.do_debt();
+            money.mark_required();
+        });
+
+        /* Выделяем обязательные поля */
+        money.mark_required();
+        $('input,select').on('change', function(){
+            money.mark_required();
+        });
+
+        /* Блокируем селекты с одной записью */
+        var select_ids = {uncover_select};
+        money.uncover_select(select_ids);
+
+
+        /* Баланс на счетах */
+        let summa_from = $('#money_account_from option:selected').attr('data-balance');
+        money.show_balance('balance_from', summa_from);
+
+        $('#money_account_from').on('change', function() {
+            summa_from = $(this).find('option:selected').attr('data-balance');
+            money.show_balance('balance_from', summa_from);
+        });
+
+        let summa_to = $('#money_account_to option:selected').attr('data-balance');
+        money.show_balance('balance_to', summa_to);
+
+        $('#money_account_to').on('change', function() {
+            summa_to = $(this).find('option:selected').attr('data-balance');
+            money.show_balance('balance_to', summa_to);
+        });
+    });
+</script>
+#[!edit_form]#

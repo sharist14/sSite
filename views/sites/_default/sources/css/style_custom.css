@@ -1,0 +1,36 @@
+@charset "UTF-8";
+body {
+
+}
+
+.hidden{
+    display: none;
+}
+
+
+/***** List sites *****/
+.site_block{
+    position: relative;
+}
+
+.site_block img{
+    opacity: 40%;
+}
+.site_block img:hover{
+    opacity: 100%;
+}
+
+.site_block .top_text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 3em;
+    text-shadow: 3px 3px 5px black;
+}
+
+.site_block:hover .top_text{
+    z-index: -1;
+}

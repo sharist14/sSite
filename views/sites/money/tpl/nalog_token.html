@@ -1,0 +1,129 @@
+#[body]#
+
+<div class="container-fluid justify-content-center" style="max-width: 600px">
+    <!-- Nav tabs -->
+    <div class="">
+        <h1 class="text-center">Статус токена</h1>
+
+        <div class="row text-center">
+            <div class="col-10 h4 m-0 ">{status}</div>
+            <a href="?act=refresh_token" class="d-block col-2 refresh_token bg-success my-0 h4 rounded text-center text-light  py-2"><i class="fas fa-sync"></i></a>
+        </div>
+
+        <div class="mt-5 mb-0">
+            <h4>Получить новый токен:</h4>
+        </div>
+
+        <ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">В ручную</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Автоматически</button>
+          </li>
+        </ul>
+    </div>
+
+    <!-- Tab panes -->
+    <div class="border border-top-0 rounded-bottom p-2">
+        <div class="tab-content">
+          <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
+          <form>
+
+              <div class="receipt_add_manual row justify-content-center mx-auto" style="max-width: 500px">
+                  <div class="col-12 mt-3">
+                      <h5 class="">1. Получение проверочного кода</h5>
+                        <label class="small w-100">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">phone</span>
+                            </div>
+                            <input type="phone" class="form-control" placeholder="+79005553535" value="{saved_phone}" readonly>
+                          </div>
+                        </label>
+
+                        <input type="submit" class="form-control btn btn-warning btn-lg mt-4" formmethod="post" formaction="?act=send_auth_sms" value="Отправить СМС">
+                  </div>
+
+                  <div class="col-12 mt-5">
+                      <h5 class="">2. Ввод полученного кода</h5>
+                        <label class="small w-100 mt-3">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">code</span>
+                            </div>
+                            <input type="text" name="code" class="form-control" placeholder="5288">
+                          </div>
+                        </label>
+
+                        <input type="submit" class="form-control btn btn-success btn-lg mt-3" formmethod="post" formaction="?act=get_token_by_phone" value="Отправить">
+                  </div>
+              </div>
+
+          </form>
+          </div>
+
+          <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+          <form>
+
+              <div class="row justify-content-center mx-auto" style="max-width: 500px">
+                  <div class="col-12 mt-3">
+                      <h5 class="">Используя ИНН</h5>
+                      <label class="small w-100">
+                          <div class="input-group">
+                              <div class="input-group-prepend">
+                                  <span class="input-group-text">inn</span>
+                              </div>
+                              <input type="number" name="inn" class="form-control" placeholder="" value="{saved_inn}" readonly>
+                          </div>
+                      </label>
+
+                      <input type="submit" class="form-control btn btn-success btn-lg mt-4" formmethod="post" formaction="?act=get_token_by_inn" value="Отправить">
+                  </div>
+              </div>
+
+          </form>
+          </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="mt-5 mb-0">
+            <h4>Последние 10 токенов</h4>
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col-2">id</th>
+                <th scope="col-7">Источник</th>
+                <th scope="col-3">Дата получения</th>
+            </tr>
+            </thead>
+            <tbody>
+            {rows}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+#[!body]#
+
+#[row]#
+<tr>
+    <th scope="row">{id}</th>
+    <th scope="row">{source}</th>
+    <th scope="row">{date}</th>
+</tr>
+#[!row]#
+
+#[error]#
+<div class="container mt-3">
+    <div class="alert alert-secondary text-danger my-1">
+        <b>{error_desk}</b>
+    </div>
+    <div class="alert alert-success text-success my-1">
+        <b>{sulution}</b>
+    </div>
+</div>
+#[!error]#
